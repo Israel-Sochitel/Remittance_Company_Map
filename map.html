@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Africa Business Presence Map</title>
+    <style>
+      * {
+          margin: 0;
+          padding: 0;
+          font-family: 'century gothic', sans-serif;
+          box-sizing: border-box;
+      }
+
+      body {
+      // --- Pan & Zoom for the SVG map ---
+      (function setupPanZoom(){
+          const svgEl = document.querySelector('.africa-map');
+          const mapGroupEl = document.getElementById('mapGroup');
+          if (!svgEl || !mapGroupEl) return;
+
+          let scale = 1;
+          const minScale = 0.7;
+          const maxScale = 4;
+          let tx = 0, ty = 0;
+
+          function updateTransform(){
+              mapGroupEl.setAttribute('transform', `translate(${tx},${ty}) scale(${scale})`);
+          }
+
+          // Zoom centered on mouse
+          svgEl.addEventListener('wheel', (e) => {
+              e.preventDefault();
+              const rect = svgEl.getBoundingClientRect();
+              const mx = e.clientX - rect.left;
+              const my = e.clientY - rect.top;
+
+              const delta = e.deltaY < 0 ? 1.12 : 0.9;
+              const prev = scale;
+              scale = Math.max(minScale, Math.min(maxScale, scale * delta));
+
+              // adjust translation so the zoom focal point remains under the cursor
+              const k = (scale / prev) - 1;
+              tx -= k * mx;
+              ty -= k * my;
+
+              updateTransform();
+          }, { passive: false });
+
+          // Drag to pan (ignore drags that start on a country)
+          let isPanning = false;
+          let startX = 0, startY = 0;
+
+          svgEl.addEventListener('mousedown', (e) => {
+              if (e.target.closest && e.target.closest('.country')) return;
+              isPanning = true;
+              startX = e.clientX;
+              startY = e.clientY;
+              svgEl.style.cursor = 'grabbing';
+          });
+
+          window.addEventListener('mousemove', (e) => {
+              if (!isPanning) return;
+              tx += (e.clientX - startX);
+              ty += (e.clientY - startY);
+              startX = e.clientX;
+              startY = e.clientY;
+              updateTransform();
+          });
+
+          window.addEventListener('mouseup', () => {
+              if (!isPanning) return;
+              isPanning = false;
+              svgEl.style.cursor = 'grab';
+          });
+
+          // Double click to reset
+          svgEl.addEventListener('dblclick', () => {
+              scale = 1; tx = 0; ty = 0; updateTransform();
+          });
+      })();
+
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+      }
+
+      .container {
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 24px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          padding: 40px;
+          max-width: 950px;
+          width: 100%;
+          position: relative;
+          overflow: hidden;
+      }
+
+      .container::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          right: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
+          pointer-events: none;
+      }
+
+      .header {
+          text-align: center;
+          margin-bottom: 30px;
+          position: relative;
+          z-index: 1;
+      }
+
+      .firmnames {
+          margin-bottom: 15px;
+          font-size: 1em;
+          color: #334155;
+      }
+      .header h1 {
+          color: #1a1a2e;
+          font-size: 2.5em;
+          font-weight: 700;
+          margin-bottom: 10px;
+          letter-spacing: -0.5px;
+      }
+
+      .header p {
+          color: #64748b;
+          font-size: 1.1em;
+          font-weight: 500;
+      }
+
+      .map-wrapper {
+          display: flex;
+          gap: 40px;
+          align-items: flex-start;
+          position: relative;
+          z-index: 1;
+      }
+
+      .map-container {
+          flex: 2;
+          position: relative;
+      }
+
+      .africa-map {
+          width: 100%;
+          height: auto;
+          filter: drop-shadow(0 20px 40px rgba(15, 23, 42, 0.12));
+          touch-action: none; /* improve touch/pan behavior */
+          cursor: grab;
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+          border-radius: 12px;
+      }
+
+      .country {
+          fill: url(#countryGradient);
+          stroke: rgba(255,255,255,0.9);
+          stroke-width: 1.2;
+          transition: transform 220ms cubic-bezier(0.2,0.8,0.2,1), filter 220ms;
+          cursor: pointer;
+          transform-box: fill-box; /* important for SVG scaling */
+          transform-origin: center;
+          vector-effect: non-scaling-stroke;
+      }
+
+      .country:hover {
+          transform: scale(1.04);
+          filter: drop-shadow(0 8px 24px rgba(102, 126, 234, 0.18));
+      }
+
+      .country.active {
+          fill: #764ba2;
+          filter: drop-shadow(0 0 20px rgba(118, 75, 162, 0.5));
+      }
+
+      .country.highlighted {
+          fill: #f59e0b;
+          animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+      }
+
+      .info-panel {
+          flex: 1;
+          min-width: 350px;
+          background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+          border-radius: 20px;
+          padding: 30px;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+          border: 1px solid rgba(226, 232, 240, 0.8);
+          position: sticky;
+          top: 20px;
+      }
+
+      .info-panel h2 {
+          color: #1e293b;
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+
+      .country-flag {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: bold;
+          font-size: 1.2em;
+      }
+
+      .logo-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+          gap: 15px;
+          margin-top: 20px;
+      }
+
+      .logo-slot {
+          aspect-ratio: 1;
+          background: #f1f5f9;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px dashed #cbd5e1;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+      }
+
+      .logo-slot:hover {
+          border-color: #667eea;
+          background: #f8fafc;
+          transform: translateY(-2px);
+      }
+
+      .logo-slot img {
+          max-width: 80%;
+          max-height: 80%;
+          object-fit: contain;
+      }
+
+      .logo-slot .placeholder {
+          color: #94a3b8;
+          font-size: 0.8em;
+          text-align: center;
+          padding: 10px;
+      }
+
+      .add-btn {
+          position: absolute;
+          bottom: 5px;
+          right: 5px;
+          width: 24px;
+          height: 24px;
+          background: #667eea;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2em;
+          opacity: 0;
+          transition: opacity 0.3s;
+      }
+
+      .logo-slot:hover .add-btn {
+          opacity: 1;
+      }
+
+      .stats {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 15px;
+          margin: 20px 0;
+      }
+
+      .stat-box {
+          background: white;
+          padding: 15px;
+          border-radius: 12px;
+          text-align: center;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+
+      }
+
+      .stat-number {
+          font-size: 1.8em;
+          font-weight: 700;
+          color: #667eea;
+      }
+
+      .stat-label {
+          font-size: 0.85em;
+          color: #64748b;
+          margin-top: 5px;
+      }
+
+      .legend {
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 2px solid #e2e8f0;
+      }
+
+      .legend h3 {
+          color: #1e293b;
+          margin-bottom: 15px;
+          font-size: 1.1em;
+      }
+
+      .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+          font-size: 0.95em;
+          color: #475569;
+      }
+
+      .legend-color {
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+      }
+
+      .tooltip {
+          position: absolute;
+          background: rgba(30, 41, 59, 0.95);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 0.9em;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.3s;
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+      }
+
+      .edit-mode {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: white;
+          padding: 15px 25px;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          z-index: 100;
+      }
+
+      .edit-mode h3 {
+          margin-bottom: 10px;
+          color: #1e293b;
+      }
+
+      .edit-mode button {
+          background: #667eea;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-right: 10px;
+          transition: all 0.3s;
+      }
+
+      .edit-mode button:hover {
+          background: #764ba2;
+          transform: translateY(-1px);
+      }
+
+      @media (max-width: 1024px) {
+          .map-wrapper {
+              flex-direction: column;
+          }
+          .info-panel {
+              min-width: 100%;
+              position: relative;
+          }
+      }
+
+      /* Print/Screenshot optimized styles */
+      @media print {
+          body {
+              background: white;
+          }
+          .container {
+              box-shadow: none;
+          }
+          .edit-mode {
+              display: none;
+          }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tooltip" id="tooltip"></div>
+
+    <div class="edit-mode">
+      <button onclick="enableEdit()">Logos</button>
+      <button onclick="clearAll()">Clear All</button>
+         </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>African Business Operations</h1>
+        <p>Remittance Companies per Top corridors</p>
+      </div>
+
+      <div class="map-wrapper">
+        <div class="map-container">
+          <svg
+            class="africa-map"
+            viewBox="100 0 600 800"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="countryGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stop-color="#f8fafc" stop-opacity="1" />
+                <stop offset="60%" stop-color="#e6eefb" stop-opacity="1" />
+                <stop offset="100%" stop-color="#e2e8f0" stop-opacity="1" />
+              </linearGradient>
+
+              <filter
+                id="mapShadow"
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
+              >
+                <feDropShadow
+                  dx="0"
+                  dy="10"
+                  stdDeviation="18"
+                  flood-color="#0f172a"
+                  flood-opacity="0.08"
+                />
+              </filter>
+            </defs>
+
+            <g
+              id="mapGroup"
+              transform="translate(0,0) scale(1)"
+              filter="url(#mapShadow)"
+            >
+              <!-- Simplified Africa Map Paths -->
+              <!-- Morocco -->
+              <path
+                id="MA"
+                class="country"
+                d="M 280 80 L 320 70 L 380 75 L 400 90 L 380 110 L 320 115 L 280 100 Z"
+                data-name="Morocco"
+              />
+
+              <!-- Algeria -->
+              <path
+                id="DZ"
+                class="country"
+                d="M 320 115 L 380 110 L 420 120 L 440 150 L 420 180 L 380 190 L 340 180 L 320 150 Z"
+                data-name="Algeria"
+              />
+
+              <!-- Tunisia -->
+              <path
+                id="TN"
+                class="country"
+                d="M 380 110 L 400 90 L 420 95 L 430 110 L 420 120 L 380 110 Z"
+                data-name="Tunisia"
+              />
+
+              <!-- Libya -->
+              <path
+                id="LY"
+                class="country"
+                d="M 420 120 L 430 110 L 480 115 L 500 140 L 480 180 L 440 180 L 420 150 Z"
+                data-name="Libya"
+              />
+
+              <!-- Egypt -->
+              <path
+                id="EG"
+                class="country"
+                d="M 480 115 L 520 110 L 540 130 L 530 160 L 500 160 L 480 140 Z"
+                data-name="Egypt"
+              />
+
+              <!-- Sudan -->
+              <path
+                id="SD"
+                class="country"
+                d="M 440 180 L 480 180 L 500 160 L 530 160 L 540 200 L 520 240 L 480 250 L 450 240 L 440 200 Z"
+                data-name="Sudan"
+              />
+
+              <!-- Chad -->
+              <path
+                id="TD"
+                class="country"
+                d="M 380 190 L 420 180 L 440 180 L 440 200 L 450 240 L 420 260 L 380 250 L 370 220 Z"
+                data-name="Chad"
+              />
+
+              <!-- Niger -->
+              <path
+                id="NE"
+                class="country"
+                d="M 340 180 L 380 190 L 370 220 L 380 250 L 340 260 L 300 250 L 280 220 L 300 190 Z"
+                data-name="Niger"
+              />
+
+              <!-- Mali -->
+              <path
+                id="ML"
+                class="country"
+                d="M 280 150 L 320 150 L 340 180 L 300 190 L 280 220 L 240 210 L 220 180 L 240 160 Z"
+                data-name="Mali"
+              />
+
+              <!-- Mauritania -->
+              <path
+                id="MR"
+                class="country"
+                d="M 220 140 L 280 130 L 280 150 L 240 160 L 220 180 L 180 170 L 200 150 Z"
+                data-name="Mauritania"
+              />
+
+              <!-- Senegal -->
+              <path
+                id="SN"
+                class="country"
+                d="M 180 170 L 200 150 L 220 160 L 210 190 L 190 200 L 170 190 Z"
+                data-name="Senegal"
+              />
+
+              <!-- Guinea -->
+              <path
+                id="GN"
+                class="country"
+                d="M 210 190 L 220 180 L 240 210 L 230 230 L 210 220 Z"
+                data-name="Guinea"
+              />
+
+              <!-- Ivory Coast -->
+              <path
+                id="CI"
+                class="country"
+                d="M 230 230 L 240 210 L 260 220 L 270 250 L 250 260 L 240 250 Z"
+                data-name="Ivory Coast"
+              />
+
+              <!-- Ghana -->
+              <path
+                id="GH"
+                class="country"
+                d="M 270 250 L 280 220 L 300 250 L 290 280 L 270 270 Z"
+                data-name="Ghana"
+              />
+
+              <!-- Nigeria -->
+              <path
+                id="NG"
+                class="country"
+                d="M 300 250 L 340 260 L 360 290 L 340 320 L 310 310 L 290 280 Z"
+                data-name="Nigeria"
+              />
+
+              <!-- Cameroon -->
+              <path
+                id="CM"
+                class="country"
+                d="M 340 260 L 380 250 L 400 280 L 380 310 L 360 290 Z"
+                data-name="Cameroon"
+              />
+
+              <!-- Central African Republic -->
+              <path
+                id="CF"
+                class="country"
+                d="M 380 250 L 420 260 L 440 280 L 420 320 L 380 310 L 400 280 Z"
+                data-name="Central African Republic"
+              />
+
+              <!-- Ethiopia -->
+              <path
+                id="ET"
+                class="country"
+                d="M 520 240 L 560 230 L 580 260 L 570 300 L 540 310 L 520 280 Z"
+                data-name="Ethiopia"
+              />
+
+              <!-- Somalia -->
+              <path
+                id="SO"
+                class="country"
+                d="M 560 230 L 600 240 L 620 280 L 600 320 L 570 300 L 580 260 Z"
+                data-name="Somalia"
+              />
+
+              <!-- Kenya -->
+              <path
+                id="KE"
+                class="country"
+                d="M 520 280 L 540 310 L 570 300 L 560 340 L 520 350 L 500 320 Z"
+                data-name="Kenya"
+              />
+
+              <!-- Tanzania -->
+              <path
+                id="TZ"
+                class="country"
+                d="M 500 320 L 520 350 L 560 340 L 550 380 L 520 400 L 490 380 L 480 350 Z"
+                data-name="Tanzania"
+              />
+
+              <!-- DRC -->
+              <path
+                id="CD"
+                class="country"
+                d="M 420 320 L 480 310 L 500 320 L 480 350 L 460 400 L 420 410 L 400 380 L 420 320 Z"
+                data-name="Democratic Republic of Congo"
+              />
+
+              <!-- Uganda -->
+              <path
+                id="UG"
+                class="country"
+                d="M 500 320 L 520 280 L 540 290 L 530 310 L 500 320 Z"
+                data-name="Uganda"
+              />
+
+              <!-- Rwanda -->
+              <path
+                id="RW"
+                class="country"
+                d="M 530 310 L 540 290 L 550 300 L 540 320 Z"
+                data-name="Rwanda"
+              />
+
+              <!-- Burundi -->
+              <path
+                id="BI"
+                class="country"
+                d="M 530 320 L 540 320 L 550 330 L 535 335 Z"
+                data-name="Burundi"
+              />
+
+              <!-- Angola -->
+              <path
+                id="AO"
+                class="country"
+                d="M 420 410 L 460 400 L 480 420 L 470 480 L 440 500 L 420 480 L 400 440 Z"
+                data-name="Angola"
+              />
+
+              <!-- Zambia -->
+              <path
+                id="ZM"
+                class="country"
+                d="M 460 400 L 520 400 L 530 430 L 500 450 L 470 440 L 460 420 Z"
+                data-name="Zambia"
+              />
+
+              <!-- Malawi -->
+              <path
+                id="MW"
+                class="country"
+                d="M 530 380 L 540 370 L 545 410 L 535 420 L 525 400 Z"
+                data-name="Malawi"
+              />
+
+              <!-- Mozambique -->
+              <path
+                id="MZ"
+                class="country"
+                d="M 520 400 L 560 390 L 580 420 L 570 480 L 540 500 L 520 480 L 530 430 Z"
+                data-name="Mozambique"
+              />
+
+              <!-- Zimbabwe -->
+              <path
+                id="ZW"
+                class="country"
+                d="M 500 450 L 530 430 L 540 460 L 520 480 L 500 470 Z"
+                data-name="Zimbabwe"
+              />
+
+              <!-- Botswana -->
+              <path
+                id="BW"
+                class="country"
+                d="M 470 440 L 500 450 L 500 470 L 470 480 L 460 460 Z"
+                data-name="Botswana"
+              />
+
+              <!-- Namibia -->
+              <path
+                id="NA"
+                class="country"
+                d="M 420 480 L 470 480 L 460 520 L 440 540 L 420 520 L 400 500 Z"
+                data-name="Namibia"
+              />
+
+              <!-- South Africa -->
+              <path
+                id="ZA"
+                class="country"
+                d="M 440 500 L 540 500 L 560 530 L 540 580 L 480 590 L 440 560 L 420 520 Z"
+                data-name="South Africa"
+              />
+
+              <!-- Madagascar -->
+              <path
+                id="MG"
+                class="country"
+                d="M 580 450 L 600 440 L 610 500 L 590 520 L 580 480 Z"
+                data-name="Madagascar"
+              />
+            </g>
+          </svg>
+        </div>
+
+        <div class="info-panel" id="infoPanel">
+          <h2>
+            <span class="country-flag" id="countryFlag">🌍</span>
+            <span id="countryName">Select a Country</span>
+          </h2>
+
+          <div class="stats" id="statsSection" style="display: none">
+            <div class="stat-box">
+              <div class="stat-number" id="companyCount">0</div>
+              <div class="stat-label">Companies</div>
+            </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="projectCount">0</div>
+                    <div class="stat-label">List</div>
+            </div>
+          </div>
+
+          <div id="companySection">
+            <h3 style="color: #1e293b; margin-bottom: 15px; font-size: 1.1em">
+              Company Presence
+            </h3>
+            <div class="logo-grid" id="logoGrid">
+              <div class="logo-slot" onclick="addLogo(this)">
+                <span class="placeholder"
+                  >Drop Logo Here<br />or Click to Add</span
+                >
+                <div class="add-btn">+</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend">
+            <h3>Legend</h3>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #e2e8f0"></div>
+              <span>Not Selected</span>
+            </div>
+
+            <div class="legend-item">
+              <div class="legend-color" style="background: #764ba2"></div>
+              <span>Top corridor & Active Operations</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let selectedCountry = null;
+      let countryData = {};
+
+      // Initialize country data storage
+      const countries = document.querySelectorAll(".country");
+      const tooltip = document.getElementById("tooltip");
+
+      countries.forEach((country) => {
+        countryData[country.id] = {
+          name: country.getAttribute("data-name"),
+          logos: [],
+          partners: Math.floor(Math.random() * 10),
+          projects: Math.floor(Math.random() * 20),
+        };
+
+        // Hover effects
+        country.addEventListener("mouseenter", (e) => {
+          tooltip.textContent = country.getAttribute("data-name");
+          tooltip.style.opacity = "1";
+        });
+
+        country.addEventListener("mousemove", (e) => {
+          // Position tooltip using client coords (works better when page scrolls)
+          tooltip.style.left = e.clientX + window.scrollX + 12 + "px";
+          tooltip.style.top = e.clientY + window.scrollY + 12 + "px";
+        });
+
+        country.addEventListener("mouseleave", () => {
+          tooltip.style.opacity = "0";
+        });
+
+        // Click to select
+        country.addEventListener("click", () => selectCountry(country));
+      });
+
+      function selectCountry(country) {
+        // Remove previous selection
+        countries.forEach((c) => c.classList.remove("active"));
+
+        // Add active class
+        country.classList.add("active");
+        selectedCountry = country.id;
+
+        // Update info panel
+        const data = countryData[country.id];
+        document.getElementById("countryName").textContent = data.name;
+        document.getElementById("countryFlag").textContent = getCountryEmoji(
+          country.id
+        );
+
+        const firmnames = ["Lemfi", "Wise", "Nala", "Sendwave", "Taptap Send", "Chippercash", "Remitly", "Afriex", "Africhange", "Oneremit", "SwyChr", "Grey", "Send App", "Paysend"];
+
+        // Show stats
+        document.getElementById("statsSection").style.display = "grid";
+        document.getElementById("companyCount").textContent = firmnames.length;
+        document.getElementById("projectCount").textContent = firmnames.join(", ");
+        document.getElementById("projectCount").style.maxHeight = "180px";
+        document.getElementById("projectCount").style.fontSize = "0.65em";
+
+        // Update logo grid
+        updateLogoGrid(data);
+      }
+
+      function updateLogoGrid(data) {
+        const grid = document.getElementById("logoGrid");
+        grid.innerHTML = "";
+
+        // Add existing logos
+        data.logos.forEach((logo, index) => {
+          const slot = document.createElement("div");
+          slot.className = "logo-slot";
+          slot.innerHTML = `<img src="${logo}" alt="Company Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f1f5f9%22/><text x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%2364748b%22>LOGO</text></svg>'">`;
+          slot.onclick = () => removeLogo(index);
+          grid.appendChild(slot);
+        });
+
+        // Add empty slot
+        const emptySlot = document.createElement("div");
+        emptySlot.className = "logo-slot";
+        emptySlot.innerHTML = `
+                <span class="placeholder">Add Logo</span>
+                <div class="add-btn">+</div>
+            `;
+        emptySlot.onclick = function () {
+          addLogo(this);
+        };
+        grid.appendChild(emptySlot);
+      } 
+
+      function addLogo(slot) {
+        if (!selectedCountry) {
+          alert("Please select a country first!");
+          return;
+        }
+
+        const url = prompt("Enter logo URL (or paste image URL):");
+        if (url) {
+          countryData[selectedCountry].logos.push(url);
+          updateLogoGrid(countryData[selectedCountry]);
+        }
+      }
+
+      function removeLogo(index) {
+        if (confirm("Remove this logo?")) {
+          countryData[selectedCountry].logos.splice(index, 1);
+          updateLogoGrid(countryData[selectedCountry]);
+        }
+      }
+
+      function getCountryEmoji(code) {
+        const emojis = {
+          ZA: "🇿🇦",
+          EG: "🇪🇬",
+          NG: "🇳🇬",
+          KE: "🇰🇪",
+          GH: "🇬🇭",
+          ET: "🇪🇹",
+          TZ: "🇹🇿",
+          UG: "🇺🇬",
+          DZ: "🇩🇿",
+          MA: "🇲🇦",
+          AO: "🇦🇴",
+          GH: "🇬🇭",
+          CM: "🇨🇲",
+          CI: "🇨🇮",
+          MG: "🇲🇬",
+          NE: "🇳🇪",
+          ML: "🇲🇱",
+          BF: "🇧🇫",
+          SN: "🇸🇳",
+          TD: "🇹🇩",
+          SO: "🇸🇴",
+          ZW: "🇿🇼",
+          CD: "🇨🇩",
+          RW: "🇷🇼",
+          BI: "🇧🇮",
+          MW: "🇲🇼",
+          ZM: "🇿🇲",
+          NA: "🇳🇦",
+          BW: "🇧🇼",
+          MZ: "🇲🇿",
+          ZA: "🇿🇦",
+          SZ: "🇸🇿",
+          LS: "🇱🇸",
+          GN: "🇬🇳",
+          SL: "🇸🇱",
+          LR: "🇱🇷",
+          MR: "🇲🇷",
+          GM: "🇬🇲",
+          BJ: "🇧🇯",
+          TG: "🇹🇬",
+          SS: "🇸🇸",
+          CF: "🇨🇫",
+          GQ: "🇬🇶",
+          GA: "🇬🇦",
+          CG: "🇨🇬",
+          DJ: "🇩🇯",
+          ER: "🇪🇷",
+          GW: "🇬🇼",
+          CV: "🇨🇻",
+          ST: "🇸🇹",
+          SC: "🇸🇨",
+          MU: "🇲🇺",
+          KM: "🇰🇲",
+          YT: "🇾🇹",
+          RE: "🇷🇪",
+          SD: "SD",
+          LY: "LY",
+          TN: "TN",
+        MG: "MG",
+        ET: "ET",
+
+        };
+        return emojis[code] || "🌍";
+      }
+
+      function enableEdit() {
+        document.body.contentEditable = true;
+        document.designMode = "on";
+        alert(
+          "Edit mode enabled! You can now click on text to edit it directly."
+        );
+      }
+
+      function clearAll() {
+        if (confirm("Clear all data?")) {
+          Object.keys(countryData).forEach((key) => {
+            countryData[key].logos = [];
+          });
+          if (selectedCountry) {
+            updateLogoGrid(countryData[selectedCountry]);
+          }
+          countries.forEach((c) => c.classList.remove("active", "highlighted"));
+        }
+      }
+
+      function highlightRandom() {
+        countries.forEach((c) => c.classList.remove("highlighted"));
+        const random = Array.from(countries)
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 5);
+        random.forEach((c) => c.classList.add("highlighted"));
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          countries.forEach((c) => c.classList.remove("active"));
+          selectedCountry = null;
+          document.getElementById("countryName").textContent =
+            "Select a Country";
+          document.getElementById("statsSection").style.display = "none";
+          document.getElementById("logoGrid").innerHTML = `
+                    <div class="logo-slot">
+                        <span class="placeholder">Select a country to view details</span>
+                    </div>
+                `;
+        }
+        if (e.key === "h") {
+          highlightRandom();
+        }
+      });
+
+      // Drag and drop support for logos
+      document.addEventListener("dragover", (e) => e.preventDefault());
+      document.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (selectedCountry && e.target.classList.contains("logo-slot")) {
+          const url = e.dataTransfer.getData("text");
+          if (url) {
+            countryData[selectedCountry].logos.push(url);
+            updateLogoGrid(countryData[selectedCountry]);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
