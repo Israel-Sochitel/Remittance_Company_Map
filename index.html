@@ -415,21 +415,20 @@
     <div class="tooltip" id="tooltip"></div>
 
     <div class="edit-mode">
-      <button onclick="enableEdit()">Logos</button>
       <button onclick="clearAll()">Clear All</button>
          </div>
 
     <div class="container">
       <div class="header">
         <h1>African Business Operations</h1>
-        <p>Remittance Companies per Top corridors</p>
+        <p>Remittance Companies per Top/Key corridors</p>
       </div>
 
       <div class="map-wrapper">
         <div class="map-container">
           <svg
             class="africa-map"
-            viewBox="150 0 500 700"
+            viewBox="143 0 500 700"
             xmlns="http://www.w3.org/2000/svg "
           >
             <defs>
@@ -478,7 +477,7 @@
 
               <!-- Algeria -->
               <path
-                id="DZ"
+                id="AG"
                 class="country"
                 d="M 320 115 L 380 110 L 420 120 L 440 150 L 420 180 L 380 190 L 340 180 L 320 150 Z"
                 data-name="Algeria"
@@ -518,7 +517,7 @@
 
               <!-- Chad -->
               <path
-                id="TD"
+                id="CH"
                 class="country"
                 d="M 380 190 L 420 180 L 440 180 L 440 200 L 450 240 L 420 260 L 380 250 L 370 220 Z"
                 data-name="Chad"
@@ -566,7 +565,7 @@
 
               <!-- Ivory Coast -->
               <path
-                id="CI"
+                id="IC"
                 class="country"
                 d="M 230 230 L 240 210 L 260 220 L 270 250 L 250 260 L 240 250 Z"
                 data-name="Ivory Coast"
@@ -744,7 +743,7 @@
               <path id="BF" class="country" d="M 260 220 L 280 220 L 300 250 L 280 270 L 260 260 L 250 240 Z" data-name="Burkina Faso" onclick="selectCountry('BF')"/>
 
               <!-- Benin -->
-              <path id="BJ" class="country" d="M 290 280 L 310 290 L 310 310 L 295 315 L 285 300 Z" data-name="Benin" onclick="selectCountry('BJ')"/>
+              <path id="BN" class="country" d="M 290 280 L 310 290 L 310 310 L 295 315 L 285 300 Z" data-name="Benin" onclick="selectCountry('BJ')"/>
 
               <!-- Togo -->
               <path id="TG" class="country" d="M 270 270 L 285 275 L 290 290 L 280 295 L 270 285 Z" data-name="Togo" onclick="selectCountry('TG')"/>
@@ -759,7 +758,7 @@
               <path id="GM" class="country" d="M 185 195 L 200 192 L 202 200 L 188 203 Z" data-name="Gambia" onclick="selectCountry('GM')"/>
 
               <!-- Guinea-Bissau -->
-              <path id="GW" class="country" d="M 190 205 L 205 200 L 210 215 L 195 220 Z" data-name="Guinea-Bissau" onclick="selectCountry('GW')"/>
+              <path id="GB" class="country" d="M 190 205 L 205 200 L 210 215 L 195 220 Z" data-name="Guinea-Bissau" onclick="selectCountry('GW')"/>
 
               <!-- East Africa additions -->
               <!-- Djibouti -->
@@ -779,7 +778,7 @@
               <path id="CG" class="country" d="M 400 310 L 420 320 L 420 350 L 400 360 L 390 340 Z" data-name="Republic of Congo" onclick="selectCountry('CG')"/>
 
               <!-- Equatorial Guinea -->
-              <path id="GQ" class="country" d="M 360 305 L 375 305 L 378 315 L 365 318 Z" data-name="Equatorial Guinea" onclick="selectCountry('GQ')"/>
+              <path id="EQ" class="country" d="M 360 305 L 375 305 L 378 315 L 365 318 Z" data-name="Equatorial Guinea" onclick="selectCountry('GQ')"/>
 
               <!-- Sao Tome and Principe -->
               <circle id="ST" class="country" cx="355" cy="325" r="5" data-name="Sao Tome and Principe" onclick="selectCountry('ST')"/>
@@ -852,7 +851,7 @@
     <script>
       let selectedCountry = null;
 
-      // Hardcoded company logos per country - REPLACE THESE URLs WITH YOUR ACTUAL LOGO URLs
+      // Company logos by country
       const countryLogos = {
         'NG': [
           'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
@@ -872,36 +871,410 @@
             
         ],
         'KE': [
-          'https://via.placeholder.com/100/10b981/ffffff?text=Sendwave',
-          'https://via.placeholder.com/100/3b82f6/ffffff?text=Remitly'
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://tse4.mm.bing.net/th/id/OIP.UrxlbXhtkSr8GIRNUQGTqgHaD8?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://res.cloudinary.com/abokiafrica/image/upload/v1701029041/meta%20images/meta-web-app_1_jhers9.png',
+          'https://th.bing.com/th/id/R.477e3734b26f111ccbd413044c72d562?rik=SWcwQ%2f6SNp4ELg&pid=ImgRaw&r=0',
+          'https://blog.africhange.com/content/images/2023/02/AF-V2-logo2-640x380.jpg',
+          'https://www.gulf-insider.com/wp-content/uploads/2025/07/botim-uae.jpg',
+          'https://swychr.io/wp-content/uploads/2022/08/swychr_logo.png',
+          'https://res-static.hc-cdn.cn/aem/content/dam/cloudbu-site/archive/hk/zh-cn/cases/logo/wapipay/wapi-logo.png'
         ],
         'GH': [
-          'https://via.placeholder.com/100/ef4444/ffffff?text=Taptap',
-          'https://via.placeholder.com/100/8b5cf6/ffffff?text=Nala'
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://tse4.mm.bing.net/th/id/OIP.UrxlbXhtkSr8GIRNUQGTqgHaD8?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://www.gulf-insider.com/wp-content/uploads/2025/07/botim-uae.jpg',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://tse2.mm.bing.net/th/id/OIP.2iiIwaqmNrWybstuzUCdfgHaDt?rs=1&pid=ImgDetMain&o=7&rm=3'
         ],
         'ZA': [
-          'https://via.placeholder.com/100/ec4899/ffffff?text=Paysend',
-          'https://via.placeholder.com/100/14b8a6/ffffff?text=Afriex'
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://businesspost.ng/wp-content/uploads/2021/09/Chipper-Cash-SA.png',
+          'https://th.bing.com/th/id/R.4d2396a7f4ae69b91328e97ee39e0207?rik=r%2bcZ2dIEGJxySw&riu=http%3a%2f%2fhellopaisa.co.za%2fselfsignup%2fimages%2flogo.png&ehk=%2fllIS2q6llBrLAqTkFtlqp0ez56pTywAJKMVk9q6ZHE%3d&risl=&pid=ImgRaw&r=0',
+          'https://financialit.net/sites/default/files/image002_copy.png',
+          'https://ffnews.com/wp-content/uploads/2023/05/Mama-Money-1.png',
+          'https://www.fnb.co.za/03images/logo.png',
+          'https://www.techafricanews.com/wp-content/uploads/2023/11/onafriq-PR-768x461.jpeg' 
         ],
-        'ET': [
-          'https://via.placeholder.com/100/f97316/ffffff?text=AfriChange'
+        'TG': [
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+           'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+           'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+           'https://api.ezipay.global/Images/ezipaylogo.png',
+           'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783'
+        ],
+        'ZM': [
+          'https://tse4.mm.bing.net/th/id/OIP.UrxlbXhtkSr8GIRNUQGTqgHaD8?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://tse2.mm.bing.net/th/id/OIP.2iiIwaqmNrWybstuzUCdfgHaDt?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://instapay.africa/wp-content/uploads/2022/05/Instapay-Logo-Red.jpg'
         ],
         'UG': [
-          'https://via.placeholder.com/100/6366f1/ffffff?text=SwyChr'
+          'https://businesspost.ng/wp-content/uploads/2021/09/Chipper-Cash-SA.png',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://tse4.mm.bing.net/th/id/OIP.UrxlbXhtkSr8GIRNUQGTqgHaD8?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://www.gulf-insider.com/wp-content/uploads/2025/07/botim-uae.jpg',
+          'https://res-static.hc-cdn.cn/aem/content/dam/cloudbu-site/archive/hk/zh-cn/cases/logo/wapipay/wapi-logo.png',
+          'https://res.cloudinary.com/abokiafrica/image/upload/v1701029041/meta%20images/meta-web-app_1_jhers9.png',
+          'https://azafinance.com/wp-content/uploads/2024/04/AZA-Finance-logo.png',
+          'https://app.xente.co/assets/v5.2.0/images/logos/xente-logo-dark.png'
         ],
         'TZ': [
-          'https://via.placeholder.com/100/84cc16/ffffff?text=Grey'
+          'https://tse4.mm.bing.net/th/id/OIP.UrxlbXhtkSr8GIRNUQGTqgHaD8?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://www.uttamis.co.tz/assets/img/uploads/trademarks/halopesa.png'
         ],
-        'SN': [
-          'https://via.placeholder.com/100/06b6d4/ffffff?text=SendApp'
+        'MA': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://www.techafricanews.com/wp-content/uploads/2023/11/onafriq-PR-768x461.jpeg',
+          'https://brandlogovector.com/wp-content/uploads/2021/12/Transfergo-Logo.png'
+        ],
+        'BN': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://swychr.io/wp-content/uploads/2022/08/swychr_logo.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/cc/56/bb/cc56bbac-7f08-3e29-fa4f-2ccef7388a7c/AppIcon-1x_U007emarketing-0-7-85-220.png/1200x630wa.png',
         ],
         'ML': [
-          'https://via.placeholder.com/100/a855f7/ffffff?text=Oneremit'
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://api.ezipay.global/Images/ezipaylogo.png'
+        ],
+        'AO': [
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://brandlogovector.com/wp-content/uploads/2021/12/Transfergo-Logo.png'
+        ],
+        'IC': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://www.techafricanews.com/wp-content/uploads/2023/11/onafriq-PR-768x461.jpeg',
+          'https://blog.africhange.com/content/images/2023/02/AF-V2-logo2-640x380.jpg',
+          'https://tse2.mm.bing.net/th/id/OIP.2iiIwaqmNrWybstuzUCdfgHaDt?rs=1&pid=ImgDetMain&o=7&rm=3'
+        ],
+        'BF': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://blog.africhange.com/content/images/2023/02/AF-V2-logo2-640x380.jpg', 
+        ],
+        'AG': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://smartmoneypeople.com/uploads/avatars/brands/1448.png',
+          'https://uploads-ssl.webflow.com/63232167760934ea9dc667db/646f8d755a6708cb10d44db4__Remit_Choice_Logo-p-2600.png'
+        ],
+        'SN': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/cc/56/bb/cc56bbac-7f08-3e29-fa4f-2ccef7388a7c/AppIcon-1x_U007emarketing-0-7-85-220.png/1200x630wa.png',
+          'https://financialit.net/sites/default/files/image002_copy.png',
+          'https://www.wizallmoney.com/static/media/logo.c6d127d8.png'
+        ],
+        'LR': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://blog.africhange.com/content/images/2023/02/AF-V2-logo2-640x380.jpg',
+        ],
+        'BW': [
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://sciopay.co/assets/images/logos/Regency-FX-Logo.png',
+          'https://www.thecurrencyshop.com.au/wp-content/uploads/2018/03/586de58709d27-1024x454.png'
+        ],
+        'GN': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png', 
+          'https://swychr.io/wp-content/uploads/2022/08/swychr_logo.png',
+          'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://play-lh.googleusercontent.com/Ptdgm9hgaHzhPsBopy_LTdp0ZWZMur2tqx8DOTjfsajw-S-rEY1fVL_Vi9XrGWur5KF4'
+        ],
+        'SL': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png', 
+          'https://www.thecurrencyshop.com.au/wp-content/uploads/2018/03/586de58709d27-1024x454.png',
+          'https://play-lh.googleusercontent.com/Ptdgm9hgaHzhPsBopy_LTdp0ZWZMur2tqx8DOTjfsajw-S-rEY1fVL_Vi9XrGWur5KF4',
+          'https://api.ezipay.global/Images/ezipaylogo.png'
+        ],
+        'GM': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://play-lh.googleusercontent.com/Ptdgm9hgaHzhPsBopy_LTdp0ZWZMur2tqx8DOTjfsajw-S-rEY1fVL_Vi9XrGWur5KF4', 
+          'https://tse3.mm.bing.net/th/id/OIP.Y9LwmPLmBqLJb7JPhmAWjAHaEK?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://pingmoney.co/assets/images/icons/share_logo.png', 
+        ],
+        'GB': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png', 
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png', 
+        ],
+        'MR': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://cdn.prod.website-files.com/625eb292f5b2be1c055a2fa1/677ec42df6c70ea245617650_Frame%201000003698.png', 
+        ],
+        'TN': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+        ],
+        'LY': [
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg', 
+        ], 
+        'EG': [
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://res.cloudinary.com/abokiafrica/image/upload/v1701029041/meta%20images/meta-web-app_1_jhers9.png',
+          'https://www.gulf-insider.com/wp-content/uploads/2025/07/botim-uae.jpg',
+          'https://instapay.africa/wp-content/uploads/2022/05/Instapay-Logo-Red.jpg',
+          'https://engineering.careem.com/images/careem-logo.png',
+          'https://images.bitdegree.org/images/ogvio-logo-300x50-v1.png'
+        ],
+        'NE': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://www.techafricanews.com/wp-content/uploads/2023/11/onafriq-PR-768x461.jpeg',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+        ], 
+        'CH': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+        ],
+        'SD': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://alfardanexchange.com/assets/alfapay/images/alphapay-logo-white.png'
+        ], 
+        'SS': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://africabusinesscommunities.com/assets/components/phpthumbof/cache/mgurush.5d1980509d902384ff1c11754ca09153.jpg',
+          'https://tse4.mm.bing.net/th/id/OIP.gM4afgleiKbq6VhOqppuPgHaEw?rs=1&pid=ImgDetMain&o=7&rm=3'
         ],
         'CM': [
-          'https://via.placeholder.com/100/a855f7/ffffff?text=Oneremit'
-        ]
-        // Add more countries as needed
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+           'https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/cc/56/bb/cc56bbac-7f08-3e29-fa4f-2ccef7388a7c/AppIcon-1x_U007emarketing-0-7-85-220.png/1200x630wa.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+        ],
+        'CF': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+        ], 
+        'GA': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://logospng.org/download/wise/wise-1536.png',
+        ], 
+        'EQ': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://tse2.mm.bing.net/th/id/OIP.4ZFS-a08cNJqXMmxlKW4JgHaCm?rs=1&pid=ImgDetMain&o=7&rm=3',
+        ],
+        'ST': [
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://www.globalwebpay.com/dist/img/gwp-logo.png',
+        ], 
+        'ET': [
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://www.gulf-insider.com/wp-content/uploads/2025/07/botim-uae.jpg',
+          'https://play-lh.googleusercontent.com/89iLWATBIfQSCGpz5IVGrbLDpkZVpWfZAfsICA3l86NsJFqAmoNkd_3RG0VocZpNNA'
+        ],
+        'ER': [
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783',
+          'https://www.globalwebpay.com/dist/img/gwp-logo.png',
+          'https://transfergalaxy.com/media/4503806/tg_logotype_black_rgb.png'
+        ], 
+        'DJ': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://transfergalaxy.com/media/4503806/tg_logotype_black_rgb.png',
+          'https://tse4.mm.bing.net/th/id/OIP.1Tbak6324awOkaaFQ9ld4wHaGN?rs=1&pid=ImgDetMain&o=7&rm=3',
+          'https://safariremit.com/images/safariremit-logo.svg'
+        ], 
+        'SO': [
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://th.bing.com/th/id/R.f3609be133f3b730d69265d68c36208b?rik=ypBdiHngfjPFrg&pid=ImgRaw&r=0',
+          'https://th.bing.com/th/id/R.43b54685ad90cf9bccdb6fcbcb82152f?rik=8OjxCEd3vwLWIA&pid=ImgRaw&r=0'
+        ], 
+        'RW': [
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://www.gulf-insider.com/wp-content/uploads/2025/07/botim-uae.jpg',
+          'https://res.cloudinary.com/abokiafrica/image/upload/v1701029041/meta%20images/meta-web-app_1_jhers9.png',
+        ], 
+        'BI': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+        ], 
+        'CG': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logowik.com/content/uploads/images/sendwave-new5700.logowik.com.webp',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://swychr.io/wp-content/uploads/2022/08/swychr_logo.png',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+        ], 
+        'CD': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.bellanaija.com/wp-content/uploads/2023/05/LEMFI-LOGO-dark.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+          'https://financialit.net/sites/default/files/nomba.png',
+        ], 
+        'MW': [
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://ffnews.com/wp-content/uploads/2023/05/Mama-Money-1.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://businesspost.ng/wp-content/uploads/2021/09/Chipper-Cash-SA.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+        ], 
+        'MZ': [
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://ffnews.com/wp-content/uploads/2023/05/Mama-Money-1.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://lh3.googleusercontent.com/X0ZxFli0mtVH6J8Ju4uhO299hojMbaBE9NhTkEyQwT8O3UgZeTP21hmCsou-8lhOaR6yka4Ag9p2fMzI_11eversp8zzxz4VBUTR=s0',
+          'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783'
+        ],
+        'ZW': [
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://ffnews.com/wp-content/uploads/2023/05/Mama-Money-1.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://www.fnb.co.za/03images/logo.png',
+        ], 
+        'NA': [
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://businesspost.ng/wp-content/uploads/2021/09/Chipper-Cash-SA.png',
+          'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783',
+        ], 
+        'MG': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://transfergalaxy.com/media/4503806/tg_logotype_black_rgb.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+        ], 
+        'LS': [
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://ffnews.com/wp-content/uploads/2023/05/Mama-Money-1.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+        ], 
+        'SZ': [
+          'https://ffnews.com/wp-content/uploads/2023/05/Mama-Money-1.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://images.seeklogo.com/logo-png/58/1/mukuru-money-transfer-uganda-logo-png_seeklogo-587836.png',
+          'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783'
+        ], 
+        'KM': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://cdn.brandfetch.io/idTA8qxZHh/w/756/h/254/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1741114762783',
+          'https://dahabshiil.co.rw/uploads/logo/logo_6643207fe77474-59900795.png',
+        ], 
+        'SC': [
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logospng.org/download/wise/wise-1536.png',
+        ], 
+        'MU': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://logospng.org/download/wise/wise-1536.png',
+          'https://financialit.net/sites/default/files/paysend-logo_0.png',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+          'https://play-lh.googleusercontent.com/YuGBMJddpOE-auq4PcdTodNLOofxI3l88qlaOwIsZKHj6n-_ul5pQKorEqc3wo2sD2AmkwAvnNNpO7Fi80Ldmw'
+        ], 
+        'CV': [
+          'https://uploads-ssl.webflow.com/63c9cda010be12a0c394c832/63e99748bca95cfa972a30a4_taptapsend%20logo-p-800.jpeg',
+          'https://www.vonage.com/content/dam/vonage/us-en/api/imagery/logos/customer-stories/Remitly.png',
+          'https://images.seeklogo.com/logo-png/35/2/worldremit-logo-png_seeklogo-356521.png',
+        ],
       };
 
       const countries = document.querySelectorAll(".country");
@@ -935,57 +1308,59 @@
         // Hardcoded firm names per country
         const countryFirmNames = {
             'NG': ["Lemfi", "Wise", "Nala","Chippercash", "Remitly", "Taptap Send", "Afriex", "Sendwave", "Africhange", "SwyChr", "Oneremit", "Grey", "Send App", "Paysend"],
-            'KE': ["Sendwave", "Remitly", "M-Pesa", "WorldRemit", "Azimo"],
-            'GH': ["Taptap Send", "Nala", "Chippercash", "Eversend", "Remitly"],
-            'ZA': ["Paysend", "Afriex", "Mukuru", "Hello Paisa", "Small World"],
-            'ET': ["AfriChange", "Remitly", "WorldRemit", "MoneyGram", "Western Union"],
-            'UG': ["SwyChr", "Chippercash", "Wave", "Remitly", "Sendwave"],
-            'TZ': ["Grey", "Nala", "Chippercash", "Eversend", "WorldRemit"],
-            'SN': ["Send App", "Taptap Send", "Wave", "Orange Money", "Free Money"],
-            'ML': ["Oneremit", "Remitly", "WorldRemit", "MoneyGram", "Wari"],
-            'CI': ["Lemfi", "Sendwave", "Chippercash", "Wave", "Orange Money"],
-            'CM': ["Express Union", "Mobile Money", "Sendwave", "WorldRemit", "Remitly", "MoneyGram "],
-            'RW': ["SwyChr", "Chippercash", "WorldRemit", "Remitly", "MoneyGram"],
-            'BI': ["Remitly", "WorldRemit", "Western Union", "MoneyGram", "Small World"],
-            'BF': ["Lemfi", "Orange Money", "Mobile Money", "WorldRemit", "Remitly"],
-            'BJ': ["Lemfi", "MTN Mobile Money", "Moov Money", "WorldRemit", "Remitly"],
-            'TG': ["Lemfi", "Taptap Send", "Orange Money", "Mobile Money", "WorldRemit"],
-            'SL': ["Africell Money", "Orange Money", "Lemfi", "WorldRemit", "Remitly"],
-            'LR': ["Orange Money", "Lonestar Cell", "WorldRemit", "Remitly", "Western Union"],
-            'GM': ["Lemfi", "Wave", "Africell", "QCell", "Remitly"],
-            'GW': ["Orange Money", "MTN", "Lemfi", "WorldRemit", "Remitly"],
-            'DJ': ["D-Money", "Sabarel", "Lemfi", "WorldRemit", "MoneyGram"],
-            'ER': ["Himbol", "Lemfi", "Western Union", "MoneyGram", "Dahabshiil"],
-            'SS': ["M-Gurush", "Zain Cash", "mPesa", "Western Union", "MoneyGram"],
-            'GA': ["Airtel Money", "Lemfi", "Western Union", "MoneyGram", "WorldRemit"],
-            'CG': ["Airtel Money", "MTN Mobile Money", "Lemfi", "WorldRemit", "Western Union"],
-            'GQ': ["Lemfi", "Wire transfers", "MoneyGram", "Western Union", "WorldRemit"],
-            'ST': ["Lemfi", "Wire transfers", "MoneyGram", "Western Union", "WorldRemit"],
-            'LS': ["M-Pesa", "EcoCash", "Lemfi", "WorldRemit", "Western Union"],
-            'SZ': ["MTN Mobile Money", "Lemfi", "WorldRemit", "Western Union", "MoneyGram"],
-            'SC': ["Lemfi", "Wire transfers", "MoneyGram", "Western Union", "WorldRemit"],
-            'KM': ["Lemfi", "Wire transfers", "MoneyGram", "Western Union", "WorldRemit"],
-            'MU': ["Lemfi", "Wise", "Revolut", "WorldRemit", "Remitly"],
-            'CV': ["Lemfi", "MoneyGram", "Western Union", "WorldRemit", "Small World"],
-            'MA': ["Lemfi", "Wise", "Paysend", "WorldRemit", "Remitly"],
-            'DZ': ["Lemfi", "Western Union", "MoneyGram", "WorldRemit", "Remitly"],
-            'TN': ["Lemfi", "Wise", "Poste Tunisienne", "Western Union", "MoneyGram"],
-            'LY': ["Lemfi", "Western Union", "MoneyGram", "WorldRemit", "Remitly"],
-            'EG': ["Lemfi", "Wise", "Paysend", "WorldRemit", "Remitly"],
-            'SD': ["Lemfi", "Western Union", "MoneyGram", "Dahabshiil", "WorldRemit"],
-            'TD': ["Lemfi", "Western Union", "MoneyGram", "WorldRemit", "Small World"],
-            'NE': ["Lemfi", "Orange Money", "Mobile Money", "WorldRemit", "Western Union"],
-            'MR': ["Lemfi", "Bank of Mauritania", "Western Union", "MoneyGram", "WorldRemit"],
-            'GN': ["Orange Money", "MTN Mobile Money", "Lemfi", "WorldRemit", "Western Union"],
-            'CD': ["Lemfi", "Orange Money", "Airtel Money", "M-Pesa", "WorldRemit"],
-            'AO': ["Lemfi", "Unitel Money", "Africell", "Western Union", "MoneyGram"],
-            'ZM': ["Lemfi", "MTN Mobile Money", "Airtel Money", "Zamtel Kwacha", "WorldRemit"],
-            'MW': ["Lemfi", "Airtel Money", "TNM Mpamba", "WorldRemit", "Western Union"],
-            'MZ': ["Lemfi", "M-Pesa", "Mukuru", "WorldRemit", "Western Union"],
-            'ZW': ["Lemfi", "EcoCash", "OneMoney", "Telecash", "WorldRemit"],
-            'BW': ["Lemfi", "Orange Money", "Mascom Myzaka", "WorldRemit", "Western Union"],
-            'NA': ["Lemfi", "MTN Mobile Money", "TN Mobile", "WorldRemit", "Western Union"],
-            'MG': ["Lemfi", "Orange Money", "Airtel Money", "WorldRemit", "Western Union"]
+            'KE': ["Sendwave", "Wise", "Taptap Send", "Remitly","Nala", "WorldRemit", "Grey", "Eversend", "Africhange", "Botim money", "SwyChr","Wapi Pay"],
+            'GH': ["Taptap Send", "WorldRemit", "LemFi", "Nala", "Sendwave", "Botim", "TalkRemit", "Zeepay"],
+            'ZA': ["Remitly", "WorldRemit", "Mukuru", "Chippercash", "Hello Paisa", "Send App", "Mama Money", "Globba", "Onafriq"],
+            'ET': ["LemFi", "Taptap Send", "Remitly", "Botim money", "Telebirr Remit"],
+            'UG': ["Chippercash", "Wave", "Remitly", "Sendwave", "WorldRemit", "Nala", "Botim money", "Wapi Pay","Grey", "AZA Finance", "Xente"],
+            'TZ': ["Nala", "Sendwave", "Taptap Send", "WorldRemit", "TalkRemit", "HaloPesa"],
+            'SN': ["Taptap Send", "Sendwave", "WorldRemit", "LemFi", "Wave", "ACE Money Transfer","Send App", "Wizall Money"],
+            'ML': ["Taptap Send", "Sendwave", "WorldRemit", "Wave", "LemFi", "Ezipay SL"],
+            'IC': ["Taptap Send", "Wave", "Onafriq", "Africhange", "Zeepay"],
+            'CM': ["Sendwave", "Taptap Send", "LemFi", "Ace Money Transfer", "Remitly", "WorldRemit", "TalkRemit"],
+            'RW': ["LemFi", "Taptap Send", "Sendwave", "WorldRemit", "Remitly", "Wise", "Dahabshiil", "Botim money", "Grey"],
+            'BI': ["Taptap Send", "WorldRemit", "Remitly", "Dahabshiil"],
+            'BF': ["Taptap Send", "Sendwave", "Wave", "WorldRemit", "LemFi", "TalkRemit", "Africhange"],
+            'BN': ["Taptap Send", "SwyChr", "WorldRemit", "Remitly", "ACE Money Transfer"],
+            'TG': ["Lemfi", "Taptap Send", "WorldRemit", "Ezipay", "Ria Money Transfer"],
+            'SL': ["Taptap Send", "Sendwave", "Lemfi", "WorldRemit", "Remitly", "Afro International", "Ezipay SL"],
+            'LR': ["Taptap Send", "Sendwave", "Remitly", "Africhange"],
+            'GM': ["Taptap Send", "Wave", "Remitly", "WorldRemit", "Afro International", "APS International", "Ping money"],
+            'GB': ["Taptap Send", "Wave", "Sendwave", "WorldRemit", "TalkRemit", "Dahabshiil"],
+            'DJ': ["Taptap Send", "Dahabshiil", "TalkRemit", "Transfer Galaxy", "D-Money", "SafariRemit"],
+            'ER': ["Remitly", "Dahabshiil", "Ria Money Transfer", "GlobalWebPay", "Transfer Galaxy"],
+            'SS': ["Taptap Send", "WorldRemit", "Remitly", "Wise", "Dahabshiil", "M-Gurush", "Zain Cash"],
+            'GA': ["Taptap Send", "Sendwave", "Remitly", "Wise"],
+            'CG': ["Taptap Send", "Sendwave", "Remitly", "WorldRemit", "LemFi", "SwyChr", "TalkRemit"],
+            'EQ': ["Taptap Send", "WorldRemit", "Fin.do"],
+            'ST': ["Wise", "GlobalWebPay"],
+            'LS': ["Mukuru", "Mama Money", "Taptap Send", "Remitly", "Paysend"],
+            'SZ': ["Mama Money", "Taptap Send", "Mukuru", "Ria Money Transfer"],
+            'SC': ["Remitly", "Taptap Send", "Wise"],
+            'KM': ["Taptap Send", "Paysend", "Ria Money Transfer", "Dahabshiil"],
+            'MU': ["Taptap Send", "Wise", "Paysend", "Remitly", "WorldRemit", "MCB Juice"],
+            'CV': ["Taptap Send", "Remitly", "WorldRemit"],
+            'MA': ["Taptap Send", "Remitly", "WorldRemit", "Paysend", "Onafriq", "TransferGo"],
+            'AG': ["Taptap Send", "Wise", "Paysend","MoneyTO", "Remit Choice"],
+            'TN': ["Taptap Send", "Lemfi", "Paysend", "Wise", "Remitly", "WorldRemit"],
+            'LY': ["Wise", "Taptap Send"],
+            'EG': ["Wise", "Remitly", "LemFi", "Grey", "Botim money", "Instapay", "Careem Pay", "Ogvio"],
+            'SD': ["Taptap Send", "Remitly", "TalkRemit", "Dahabshiil", "AlfaPay"],
+            'CH': ["Taptap Send", "Sendwave", "WorldRemit", "Dahabshiil"],
+            'NE': ["Taptap Send", "Wave", "Remitly", "Onafriq", "Dahabshiil"],
+            'MR': ["Taptap Send", "Remitly", "Wise", "Paysend", "WorldRemit", "TransFi"],
+            'GN': ["Taptap Send", "Sendwave", "WorldRemit", "SwyChr", "Ria Money Transfer", "TalkRemit", "Afro International"],
+            'CD': ["Taptap Send", "Lemfi", "Remitly", "WorldRemit", "Dahabshiil", "Nomba"],
+            'AO': ["Remitly", "LemFi", "Mukuru", "TransferGo"],
+            'ZM': ["Nala", "WorldRemit", "Zeepay", "Mukuru", "Dahabshiil", "InstaPay"],
+            'MW': ["Mukuru", "Mama Money", "Taptap Send", "Chippercash", "WorldRemit", "Remitly"],
+            'MZ': ["Mukuru", "Mama Money", "Taptap Send", "TalkRemit", "Ria Money Transfer"],
+            'ZW': ["Mukuru", "Mama Money", "Taptap Send", "WorldRemit", "Remitly", "Globba"],
+            'BW': ["Remitly", "WorldRemit", "Mukuru", "Paysend","Regency FX", "TorFX"],
+            'NA': ["Mukuru", "Taptap Send", "Chippercash", "Ria Money Transfer"],
+            'MG': ["Taptap Send", "Transfer Galaxy", "Remitly", "WorldRemit"],
+            'CF': ["Taptap Send", "WorldRemit"],
+            'SO': ["Dahabshiil", "Taptap Send", "WorldRemit", "Remitly", "Sendwave", "Taaj Money Transfer", "PaySii"],
         };
 
         const firmnames = countryFirmNames[country.id] || ["Lemfi", "Wise", "Nala", "Sendwave", "Taptap Send", "Chippercash", "Remitly", "Afriex", "Africhange", "Oneremit", "SwyChr", "Grey", "Send App", "Paysend"];
@@ -1028,18 +1403,18 @@
           ET: "🇪🇹",
           TZ: "🇹🇿",
           UG: "🇺🇬",
-          DZ: "🇩🇿",
+          AG: "AG",
           MA: "🇲🇦",
           AO: "🇦🇴",
           GH: "🇬🇭",
           CM: "🇨🇲",
-          CI: "🇨🇮",
+          IC: "🇮🇨",
           MG: "🇲🇬",
           NE: "🇳🇪",
           ML: "🇲🇱",
           BF: "🇧🇫",
           SN: "🇸🇳",
-          TD: "🇹🇩",
+          CH: "🇨🇭",
           SO: "🇸🇴",
           ZW: "🇿🇼",
           CD: "🇨🇩",
@@ -1058,16 +1433,16 @@
           LR: "🇱🇷",
           MR: "🇲🇷",
           GM: "🇬🇲",
-          BJ: "🇧🇯",
+          BN: "🇧🇳",
           TG: "🇹🇬",
           SS: "🇸🇸",
           CF: "🇨🇫",
-          GQ: "🇬🇶",
+          EQ: "🇪🇶",
           GA: "🇬🇦",
           CG: "🇨🇬",
           DJ: "🇩🇯",
           ER: "🇪🇷",
-          GW: "🇬🇼",
+          GB: "🇬🇧",
           CV: "🇨🇻",
           ST: "🇸🇹",
           SC: "🇸🇨",
